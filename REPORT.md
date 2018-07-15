@@ -6,7 +6,7 @@
 - Run python manage.py migrate
 - Run python manage.py runserver # Now go to localhost:8000
 
-##Import
+## Import
 
 - Run python manage.py import 
   - Optional argument -u # specify consumer file location
