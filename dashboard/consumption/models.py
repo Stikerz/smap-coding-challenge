@@ -26,8 +26,8 @@ class Consumption(models.Model):
     def __str__(self):
         return "Consumption {} Comsumer {}".format(self.id, self.consumer_id)
 
-
-    def get_average(self, consumer=None):
+    @classmethod
+    def get_average(cls, consumer=None):
 
         if consumer:
             consumptions = Consumption.objects.filter(consumer_id=consumer)
@@ -55,8 +55,8 @@ class Consumption(models.Model):
 
         return energy_data
 
-
-    def get_total(self, consumer=None):
+    @classmethod
+    def get_total(cls, consumer=None):
 
         if consumer:
             consumptions = Consumption.objects.filter(consumer_id=consumer)
