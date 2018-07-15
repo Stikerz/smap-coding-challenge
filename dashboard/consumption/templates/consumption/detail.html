@@ -1,5 +1,179 @@
-{% extends 'consumption/layout.html' %}
+{% include 'consumption/base.html' %}
 
 {% block content %}
+
+
+     <div class="container">
+
+     <h4>User {{ user_data.id }}</h4></br>
+
+
+ <div class="container">
+<h7>Monthly Total & Average Consumption</h7></br>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="chLine"></canvas>
+
+
+
+        <canvas id="myChart" width="400" height="400"></canvas>
+
+        <script type="text/javascript">
+            {% block jquery %}
+
+                var endpoint = '/api/consumers/';
+                var labels = [];
+                var totals = [];
+                var average = [];
+                var id = "{{ user_data.id }}";
+
+                console.log(endpoint);
+                var h = $.ajax({
+                    method: "GET",
+                    url: endpoint,
+                    success: function (data) {
+                        labels = data[id].labels;
+                        totals = data[id].total;
+                        average = data[id].average;
+                        console.log(totals);
+                        console.log(average)
+
+                        var ctx = document.getElementById("myChart").getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'average watthour(Wh)',
+                                    data: average,
+                                    fill: false,
+                                    borderColor: 'rgba(270, 162, 235, 75)',
+                                    borderWidth: 4
+                                },{label: 'total watthour(Wh)',
+                                    data: totals,
+                                    fill: false,
+                                    borderColor: 'rgba(70, 162, 235, 15)',
+                                    borderWidth: 4
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
+                                    }]
+                                }
+                            }
+                        })
+
+
+                    },
+                    error: function (data) {
+                        console.log("error")
+                        console.log(data)
+
+                    },
+
+
+                });
+
+
+ {% endblock jquery%}
+        </script>
+
+                </div>
+            </div>
+        </div>
+     </div>
+</div>
+<br/><br/>
+
+<form class="float-right" method="get" action="">
+<input type="text" name="query" placeholder="Search Date"/>
+<input type="submit" value="Search"/>
+</form><br/><br/><br/>
+       </div>
+
+
+<div class="container h-100">
+       <div class="row align-items-center h-100">
+        <div class="col-6 mx-auto">
+
+
+            <table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Date</th>
+      <th scope="col">Consumption in watthour(Wh)</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for obj in object_list %}
+    <tr>
+      <th scope="row">{{ obj.id }}</th>
+      <td>{{ obj.date_time }}</td>
+      <td>{{ obj.consumption }}</td>
+    </tr>
+  {% endfor %}
+
+  </tbody>
+</table>
+
+          </div>
+</div>
+      </div>
+
+
+    <div class="container">
+
+    <div class="pagination">
+    <span class="step-links">
+        {% if object_list.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ object_list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+        </span>
+
+        {% if object_list.has_next %}
+            <a href="?page={{ object_list.next_page_number }}">next</a>
+            <a href="?page={{ object_list.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+ </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 {% endblock %}
